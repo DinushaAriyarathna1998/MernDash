@@ -5,15 +5,20 @@ import App from './App';
 import { configureStore } from '@reduxjs/toolkit';
 import globalReducer from "state"
 import { Provider } from 'react-redux';
-
+import { setupListeners } from '@reduxjs/toolkit/dist/query';
+import { api } from 'state/api';
 //here we specify all the reducers from slicers belong to features
 
 
 const store = configureStore({
     reducer: {
       global: globalReducer,
+	  [api.reducerPath]: api.reducer,
     },
-})
+
+	middleware: (getDefault) => getDefault().concat(api.middleware)
+});
+setupListeners(store.dispatch);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
